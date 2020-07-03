@@ -47,7 +47,6 @@ class ConfigVars:
 
         return filtered_ds
 
-    @property
     def sample(self):
         '''
         Creates a pandas dataframe which we need to
