@@ -1,9 +1,11 @@
 import pandas
 import util
 import re
+from enum import Enum, unique
 
 
-class DataSets:
+@unique
+class DataSets(Enum):
     GENUINE = "data/genuine_accounts.csv/users.csv"
     T_1 = "data/traditional_spambots_1.csv/users.csv"
     T_2 = "data/traditional_spambots_2.csv/users.csv"
@@ -13,13 +15,14 @@ class DataSets:
     S_3 = "data/social_spambots_3.csv/users.csv"
 
 
-def get_data_sets(data_set_enums):
+def get_data_sets(data_set_enums=None):
     '''
-    data_set_enums: [DataSets enums].
+    data_set_enums: [DataSets enums]. Loads all if this is None.
     '''
+    data_set_enums = data_set_enums or list(DataSets)
     ds = {}
     for e in data_set_enums:
-        ds[e] = pandas.read_csv(e)
+        ds[e] = pandas.read_csv(e.value)
     return ds
 
 
@@ -69,6 +72,7 @@ def add_final_classification(*args):
         DataSets.T_1, DataSets.T_2, DataSets.T_3,
         DataSets.S_1, DataSets.S_2, DataSets.S_3,
     ):
+
         args[1]["is_bot"] = 1
     else:
         raise NotImplementedError
@@ -121,6 +125,7 @@ def add_col(raw_datasets, col_name, func):
     depending on func.
     '''
     for ds in raw_datasets.values():
+        # print(key, ds["is_bot"])
         ds[col_name] = ds.apply(
             lambda row: func(row), axis=1
         )
