@@ -18,6 +18,5 @@ def mess():
     new_dataframe = conf.sample()
 
 
-
 if __name__ == "__main__":
     mess()
