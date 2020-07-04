@@ -29,7 +29,6 @@ class ConfigVars:
         # The feature which we're classifying on.
         # In our case this is going to be `is_bot`.
         self.classify_on = classify_on
-
         self.datasets = self._build_datasets()
         for ds in self.datasets.values():
             if self.classify_on not in ds.columns.values:
@@ -50,6 +49,9 @@ class ConfigVars:
         '''
         Creates a pandas dataframe which we need to
         train on based on the config.
+
+        Returns the dataframe with test feature and
+        a column of the target feature defined by classify on.
         '''
         datasets = self.datasets
         for key, num_samples in self.to_sample.items():
@@ -64,4 +66,7 @@ class ConfigVars:
         # Split non-int/non-float columns
         # into separate binary columns.
         s = pandas.get_dummies(s)
-        return s
+
+        target_column = getattr(s, self.classify_on)
+        s = s.drop(columns=[self.classify_on])
+        return s, target_column

@@ -6,3 +6,11 @@ def apply_to_all(func, datasets):
     for key, dataset in list(datasets.items()):
         datasets[key] = func(key, dataset)
     return datasets
+
+
+def accuracy(dataframe, field1, field2):
+    n = 0
+    for e, row in dataframe.iterrows():
+        if row[field1] == row[field2]:
+            n += 1
+    return n / len(dataframe.index)
