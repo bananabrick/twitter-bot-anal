@@ -1,5 +1,4 @@
 import pandas
-import sklearn
 import util
 import data
 import numpy
