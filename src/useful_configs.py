@@ -1,8 +1,7 @@
 import config
 
-# Uses everything we've built and
-# everything I think we should keep
-# from the raw data.
+# TODO: These config names are crap. Maybe change them?
+
 ALL = config.ConfigVars(
     name="all_features",
     cols_to_build=[
@@ -15,7 +14,8 @@ ALL = config.ConfigVars(
         "geo_enabled",
         "has_name",
         "fr_fo_ratio_gt_100",
-        "fr_fo_ratio_gt_50"
+        "fr_fo_ratio_gt_50",
+        "fr_fo_ratio"
     ],
     cols_to_keep=[
         "is_bot",
@@ -31,8 +31,39 @@ ALL = config.ConfigVars(
         "followers_count",
         "friends_count",
         "statuses_count",
-        "listed_count"
+        "fr_fo_ratio"
+        # "listed_count" Dropping this cause wtf does it mean?
     ],
     classify_on="is_bot"
 )
 
+PRUNE = config.ConfigVars(
+    name="pruned",
+    cols_to_build=[
+        "is_bot",
+        "has_default_profile_image",
+        "geo_enabled",
+        "has_name",
+    ],
+    cols_to_keep=[
+        "is_bot",
+        "has_default_profile_image",
+        "geo_enabled",
+        "has_name",
+    ],
+    classify_on="is_bot"
+)
+
+MINIMAL_PREEXIST = config.ConfigVars(
+    name="only friends/followers/statuses",
+    cols_to_build=[
+        "is_bot",
+    ],
+    cols_to_keep=[
+        "is_bot",
+        "followers_count",
+        "friends_count",
+        "statuses_count",
+    ],
+    classify_on="is_bot"
+)

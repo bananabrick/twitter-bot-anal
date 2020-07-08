@@ -49,7 +49,8 @@ TO_BUILD = [
     "description_length", # Useful for some of the traditional ones.
     "has_name", # Pretty useless, most of them have a name.
     "fr_fo_ratio_gt_50", # Really useless feature on our dataset.
-    "fr_fo_ratio_gt_100" # Useless on our dataset.
+    "fr_fo_ratio_gt_100", # Useless on our dataset.
+    "fr_fo_ratio" # raw ratio with no limits.
 ]
 
 
@@ -139,22 +140,26 @@ def add_col(raw_datasets, col_name, func):
         )
 
 
+def friend_follower_ratio(row):
+    friends = row["friends_count"]
+    followers = row["followers_count"]
+
+    if pandas.isna(friends) or pandas.isna(followers):
+        # Don't have a valid ratio, not rly sure
+        # what to do here?
+        return 0
+
+    followers = followers or 1
+    return friends / followers
+
+
 def friend_follower_bot(limit):
     def h(row):
         '''
         Returns 1 if the friends : followers ratio
         is greater than limit.
         '''
-        friends = row["friends_count"]
-        followers = row["followers_count"]
-
-        if pandas.isna(friends) or pandas.isna(followers):
-            # Don't have a valid ratio, so we don't
-            # have to cull.
-            return 0
-
-        followers = followers or 1
-        return 1 if (friends / followers) > limit else 0
+        return 1 if friend_follower_ratio(row) > limit else 0
     return h
 
 
@@ -206,6 +211,10 @@ def build_filtered_datasets(raw_datasets, to_build):
                 raw_datasets, data_filter, friend_follower_bot(50)
             )
         elif data_filter == "fr_fo_ratio_gt_100":
+            add_col(
+                raw_datasets, data_filter, friend_follower_bot(100)
+            )
+        elif data_filter == "fr_fo_ratio":
             add_col(
                 raw_datasets, data_filter, friend_follower_bot(100)
             )
