@@ -1,3 +1,5 @@
+import matplotlib
+
 def apply_to_all(func, datasets):
     '''
     Applies func to each dataset in the dict of datasets.

@@ -1,44 +1,14 @@
 import data
 import util
-import config
 import pandas
+import useful_configs
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
 
 def base_test():
-    base_config = config.ConfigVars(
-        cols_to_build=[
-            "is_bot",
-            "has_default_profile_image", 
-            "no_screen_name",
-            "language_not_empty",
-            "description_contains_url",
-            "description_length",
-            "geo_enabled",
-            "has_name",
-            "fr_fo_ratio_gt_100",
-            "fr_fo_ratio_gt_50"
-        ],
-        cols_to_keep=[
-            "is_bot",
-            "has_default_profile_image", 
-            "no_screen_name",
-            "language_not_empty",
-            "description_contains_url",
-            "description_length",
-            "fr_fo_ratio_gt_100",
-            "fr_fo_ratio_gt_50",
-            "has_name",
-            "geo_enabled",
-            "followers_count",
-            "friends_count",
-            "statuses_count",
-            "listed_count"
-        ],
-        classify_on="is_bot"
-    )
+    base_config = useful_configs.ALL
 
     sample, is_bot = base_config.sample(
         {
@@ -51,8 +21,11 @@ def base_test():
 
     tree = RandomForestClassifier()
     reg = LogisticRegression(max_iter=1000)
+
     reg.fit(sample, is_bot)
     tree.fit(sample, is_bot)
+
+
     print(list(zip(sample.columns.values, tree.feature_importances_)))
 
     test_sample, is_bot_test = base_config.sample(
@@ -64,12 +37,18 @@ def base_test():
 
         }
     )
-    prediction = tree.predict(test_sample)
+    tree_prediction = tree.predict(test_sample)
+    reg_prediction = reg.predict(test_sample)
     compare = pandas.DataFrame(
-        {'is_bot_original': is_bot_test, 'is_bot_predict': prediction}
+        {
+            'is_bot_original': is_bot_test,
+            'tree_is_bot_predict': tree_prediction,
+            'reg_is_bot_predict': reg_prediction
+        }
     )
 
-    print(util.accuracy(compare, "is_bot_original", "is_bot_predict"))
+    print(util.accuracy(compare, "is_bot_original", "tree_is_bot_predict"))
+    print(util.accuracy(compare, "is_bot_original", "reg_is_bot_predict"))
 
 
 if __name__ == "__main__":

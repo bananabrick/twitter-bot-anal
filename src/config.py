@@ -6,9 +6,11 @@ import numpy
 
 class ConfigVars:
     def __init__(
-        self, cols_to_build, cols_to_keep, classify_on
+        self, name, cols_to_build, cols_to_keep, classify_on
     ):
         '''
+        name: self explanatory.
+
         cols_to_build: Custom columns which we might want to build
         from the existing columns.
 
@@ -18,6 +20,7 @@ class ConfigVars:
         classify_on: The feature which we're classifying on.
         The feature must exist in
         '''
+        self.name = name
         self.cols_to_build = cols_to_build
         self.cols_to_keep = cols_to_keep
 
