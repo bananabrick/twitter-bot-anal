@@ -46,8 +46,10 @@ TO_BUILD = [
     "geo_enabled", # Super important feature. T1, T2, T2 rarely has this.
     "language_not_empty", # Sketchy cause it works well on our dataset.
     "description_contains_url", # Not that useful.
-    "description_length", # Maybe we can use long lengths to classify genuine?
-    # "lt_50_tweets", # Can't find a num tweets column.
+    "description_length", # Useful for some of the traditional ones.
+    "has_name", # Pretty useless, most of them have a name.
+    "fr_fo_ratio_gt_50", # Really useless feature on our dataset.
+    "fr_fo_ratio_gt_100" # Useless on our dataset.
 ]
 
 
@@ -119,6 +121,12 @@ def desc_length(row):
     return len(row["description"])
 
 
+def has_name(row):
+    if pandas.isna(row["name"]):
+        return 0
+    return 1
+
+
 def add_col(raw_datasets, col_name, func):
     '''
     Adds col_name to dataset with values
@@ -129,6 +137,25 @@ def add_col(raw_datasets, col_name, func):
         ds[col_name] = ds.apply(
             lambda row: func(row), axis=1
         )
+
+
+def friend_follower_bot(limit):
+    def h(row):
+        '''
+        Returns 1 if the friends : followers ratio
+        is greater than limit.
+        '''
+        friends = row["friends_count"]
+        followers = row["followers_count"]
+
+        if pandas.isna(friends) or pandas.isna(followers):
+            # Don't have a valid ratio, so we don't
+            # have to cull.
+            return 0
+
+        followers = followers or 1
+        return 1 if (friends / followers) > limit else 0
+    return h
 
 
 def build_filtered_datasets(raw_datasets, to_build):
@@ -169,6 +196,18 @@ def build_filtered_datasets(raw_datasets, to_build):
         elif data_filter == "description_length":
             add_col(
                 raw_datasets, data_filter, desc_length
+            )
+        elif data_filter == "has_name":
+            add_col(
+                raw_datasets, data_filter, has_name
+            )
+        elif data_filter == "fr_fo_ratio_gt_50":
+            add_col(
+                raw_datasets, data_filter, friend_follower_bot(50)
+            )
+        elif data_filter == "fr_fo_ratio_gt_100":
+            add_col(
+                raw_datasets, data_filter, friend_follower_bot(100)
             )
 
     return raw_datasets

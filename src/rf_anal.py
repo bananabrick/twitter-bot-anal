@@ -4,11 +4,10 @@ import config
 import pandas
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+
 
 def base_test():
-    # Uses all custom columns, and keeps
-    # all columns I think are relevant from
-    # the old one.
     base_config = config.ConfigVars(
         cols_to_build=[
             "is_bot",
@@ -17,6 +16,10 @@ def base_test():
             "language_not_empty",
             "description_contains_url",
             "description_length",
+            "geo_enabled",
+            "has_name",
+            "fr_fo_ratio_gt_100",
+            "fr_fo_ratio_gt_50"
         ],
         cols_to_keep=[
             "is_bot",
@@ -25,6 +28,10 @@ def base_test():
             "language_not_empty",
             "description_contains_url",
             "description_length",
+            "fr_fo_ratio_gt_100",
+            "fr_fo_ratio_gt_50",
+            "has_name",
+            "geo_enabled",
             "followers_count",
             "friends_count",
             "statuses_count",
@@ -35,21 +42,25 @@ def base_test():
 
     sample, is_bot = base_config.sample(
         {
-            # Let's try out these two datasets.
             data.DataSets.GENUINE: 300,
-            data.DataSets.T_1: 300,
+            data.DataSets.T_1: 100,
+            data.DataSets.T_2: 100,
+            data.DataSets.T_3: 100,
         }
     )
 
-    tree = RandomForestClassifier(max_depth=1)
+    tree = RandomForestClassifier()
+    reg = LogisticRegression(max_iter=1000)
+    reg.fit(sample, is_bot)
     tree.fit(sample, is_bot)
     print(list(zip(sample.columns.values, tree.feature_importances_)))
 
     test_sample, is_bot_test = base_config.sample(
         {
-            # Let's try out these two datasets.
-            data.DataSets.GENUINE: 100,
-            data.DataSets.T_1: 100,
+            data.DataSets.GENUINE: 2000,
+            data.DataSets.T_1: 600,
+            data.DataSets.T_2: 600,
+            data.DataSets.T_3: 600,
 
         }
     )
@@ -59,6 +70,7 @@ def base_test():
     )
 
     print(util.accuracy(compare, "is_bot_original", "is_bot_predict"))
+
 
 if __name__ == "__main__":
     base_test()
