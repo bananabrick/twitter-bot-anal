@@ -152,37 +152,23 @@ def build_filtered_datasets(raw_datasets, to_build):
     return raw_datasets
 
 
-
 # Contains both features we want to build from other
 # features and existing features we want to modify.
 # Add features which fall into either of those cases
 # here and add support in `build_filtered_datasets`.
-def foo():
-    pass
-
 TO_BUILD = {
     "is_bot": None,
-    "has_default_profile_image": profile_image, # 99% data seems to have this? Useless.
-    "no_screen_name": no_screen_name, # All data has this. Useless.
-    "geo_enabled": geo_enabled, # Super important feature. T1, T2, T2 rarely has this.
-    "language_not_empty": lang_not_empty, # Sketchy cause it works well on our dataset.
-    "description_contains_url": contains_url, # Not that useful.
-    "description_length": desc_length, # Useful for some of the traditional ones.
-    "has_name": has_name, # Pretty useless, most of them have a name.
-    "fr_fo_ratio_gt_50": friend_follower_bot(50), # Really useless feature on our dataset.
-    "fr_fo_ratio_gt_100": friend_follower_bot(100), # Useless on our dataset.
-    "fr_fo_ratio": friend_follower_ratio # raw ratio with no limits.
+    "has_default_profile_image": profile_image,  # 99% data seems to have this? Useless.
+    "no_screen_name": no_screen_name,  # All data has this. Useless.
+    "geo_enabled": geo_enabled,  # Super important feature. T1, T2, T2 rarely has this.
+    "language_not_empty": lang_not_empty,  # Sketchy cause it works well on our dataset.
+    "description_contains_url": contains_url,  # Not that useful.
+    "description_length": desc_length,  # Useful for some of the traditional ones.
+    "has_name": has_name,  # Pretty useless, most of them have a name.
+    "fr_fo_ratio_gt_50": friend_follower_bot(50),  # Really useless feature on our dataset.
+    "fr_fo_ratio_gt_100": friend_follower_bot(100),  # Useless on our dataset.
+    "fr_fo_ratio": friend_follower_ratio  # raw ratio with no limits.
 }
-
-
-TO_KEEP = list(TO_BUILD.keys())[:]
-TO_KEEP.extend([
-    "followers_count",
-    "friends_count",
-    "statuses_count",
-    "favourites_count",
-    "listed_count"
-])
 
 
 def _col_type(datasets, col):
