@@ -161,7 +161,7 @@ def foo():
     pass
 
 TO_BUILD = {
-    "is_bot": lambda x: x,
+    "is_bot": None,
     "has_default_profile_image": profile_image, # 99% data seems to have this? Useless.
     "no_screen_name": no_screen_name, # All data has this. Useless.
     "geo_enabled": geo_enabled, # Super important feature. T1, T2, T2 rarely has this.
