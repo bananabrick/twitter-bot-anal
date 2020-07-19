@@ -43,7 +43,7 @@ class ConfigVars:
         )
         return filtered_ds
 
-    def sample(self, to_sample):
+    def sample(self, to_sample, bucket_non_bool=False, random_state=None):
         '''
         Creates a pandas dataframe which we need to
         train on based on the config.
@@ -61,7 +61,7 @@ class ConfigVars:
         for key, num_samples in to_sample.items():
             num_samples = min(num_samples, len(datasets[key].index))
             sampled_datasets.append(
-                datasets[key].copy(deep=True).sample(num_samples)
+                datasets[key].copy(deep=True).sample(num_samples, random_state=random_state)
             )
 
         s = pandas.concat(sampled_datasets, sort=False)
@@ -70,7 +70,16 @@ class ConfigVars:
 
         # Split non-int/non-float columns
         # into separate binary columns.
-        s = pandas.get_dummies(s)
+        # s = pandas.get_dummies(s, dtype=bool)
         target_column = getattr(s, self.classify_on)
         s = s.drop(columns=[self.classify_on])
+
+        if bucket_non_bool:
+            for key, dt in zip(s.keys(), s.dtypes):
+                if dt != bool:
+                    s[key] = pandas.cut(s[key], 5, labels=list(range(5)))
+
+
         return s, target_column
+
+

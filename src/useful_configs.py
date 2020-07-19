@@ -37,6 +37,37 @@ ALL = config.ConfigVars(
     classify_on="is_bot"
 )
 
+NB = config.ConfigVars(
+    name="all_features",
+    cols_to_build=[
+        "is_bot",
+        "has_default_profile_image",
+        "no_screen_name",
+        "language_not_empty",
+        "description_contains_url",
+        "description_length",
+        "geo_enabled",
+        "has_name",
+        "fr_fo_ratio"
+    ],
+    cols_to_keep=[
+        "is_bot",
+        "has_default_profile_image",
+        "no_screen_name",
+        "language_not_empty",
+        "description_contains_url",
+        "description_length",
+        "has_name",
+        "geo_enabled",
+        "followers_count",
+        "friends_count",
+        "statuses_count",
+        "fr_fo_ratio"
+        # "listed_count" Dropping this cause wtf does it mean?
+    ],
+    classify_on="is_bot"
+)
+
 PRUNE = config.ConfigVars(
     name="pruned",
     cols_to_build=[

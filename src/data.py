@@ -85,35 +85,35 @@ def add_final_classification(*args):
 
 def profile_image(row):
     if row["default_profile_image"] != 1:
-        return 0
-    return 1
+        return False
+    return True
 
 
 def no_screen_name(row):
     if pandas.isna(row["screen_name"]):
-        return 1
-    return 0
+        return False
+    return True
 
 
 def geo_enabled(row):
     if row["geo_enabled"] == 1:
-        return 1
-    return 0
+        return False
+    return True
 
 
 def lang_not_empty(row):
     if pandas.isna(row["lang"]):
-        return 0
-    return 1
+        return False
+    return True
 
 
 def contains_url(row):
     if pandas.isna(row["description"]):
-        return 0
+        return False
     
     if URL_REGEX.match(row["description"]):
-        return 1
-    return 0
+        return True
+    return False
 
 
 def desc_length(row):
@@ -124,8 +124,8 @@ def desc_length(row):
 
 def has_name(row):
     if pandas.isna(row["name"]):
-        return 0
-    return 1
+        return False
+    return True
 
 
 def add_col(raw_datasets, col_name, func):
@@ -159,7 +159,7 @@ def friend_follower_bot(limit):
         Returns 1 if the friends : followers ratio
         is greater than limit.
         '''
-        return 1 if friend_follower_ratio(row) > limit else 0
+        return False if friend_follower_ratio(row) > limit else True
     return h
 
 
@@ -216,7 +216,7 @@ def build_filtered_datasets(raw_datasets, to_build):
             )
         elif data_filter == "fr_fo_ratio":
             add_col(
-                raw_datasets, data_filter, friend_follower_bot(100)
+                raw_datasets, data_filter, friend_follower_ratio
             )
 
     return raw_datasets
