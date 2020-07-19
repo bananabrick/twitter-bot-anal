@@ -64,7 +64,7 @@ def edit_distance(word1, word2):
         return edit_distance(word1[1:], word2[1:])
     else:  # word1[0] != word2[0]
         return min([
-            1 + edit_distance(word1, word2[1:]),  # delete character
-            1 + edit_distance(word1[1:], word2),  # insert character
-            1 + edit_distance(word1, word1[0] + word2[1:])
+            1 + edit_distance(word1, word2[1:]),        # delete character
+            1 + edit_distance(word1[1:], word2),        # insert character
+            1 + edit_distance(word1[1:], word2[1:])     # replace character
         ])
