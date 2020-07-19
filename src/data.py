@@ -34,35 +34,16 @@ URL_REGEX = re.compile(
     "|www\.[a-zA-Z0-9]+\.[^\s]{2,})"
 )
 
-
-# Contains both features we want to build from other
-# features and existing features we want to modify.
-# Add features which fall into either of those cases
-# here and add support in `build_filtered_datasets`.
-TO_BUILD = [
-    "is_bot",
-    "has_default_profile_image", # 99% data seems to have this? Useless.
-    "no_screen_name", # All data has this. Useless.
-    "geo_enabled", # Super important feature. T1, T2, T2 rarely has this.
-    "language_not_empty", # Sketchy cause it works well on our dataset.
-    "description_contains_url", # Not that useful.
-    "description_length", # Useful for some of the traditional ones.
-    "has_name", # Pretty useless, most of them have a name.
-    "fr_fo_ratio_gt_50", # Really useless feature on our dataset.
-    "fr_fo_ratio_gt_100", # Useless on our dataset.
-    "fr_fo_ratio" # raw ratio with no limits.
-]
-
-
-TO_KEEP = TO_BUILD[:]
-TO_KEEP.extend([
-    "followers_count",
-    "friends_count",
-    "statuses_count",
-    "favourites_count",
-    "listed_count"
-])
-
+def add_col(raw_datasets, col_name, func):
+    '''
+    Adds col_name to dataset with values
+    depending on func.
+    '''
+    for ds in raw_datasets.values():
+        # print(key, ds["is_bot"])
+        ds[col_name] = ds.apply(
+            lambda row: func(row), axis=1
+        )
 
 def add_final_classification(*args):
     '''
@@ -127,19 +108,6 @@ def has_name(row):
         return False
     return True
 
-
-def add_col(raw_datasets, col_name, func):
-    '''
-    Adds col_name to dataset with values
-    depending on func.
-    '''
-    for ds in raw_datasets.values():
-        # print(key, ds["is_bot"])
-        ds[col_name] = ds.apply(
-            lambda row: func(row), axis=1
-        )
-
-
 def friend_follower_ratio(row):
     friends = row["friends_count"]
     followers = row["followers_count"]
@@ -178,48 +146,43 @@ def build_filtered_datasets(raw_datasets, to_build):
     for data_filter in to_build:
         if data_filter == "is_bot":
             util.apply_to_all(add_final_classification, raw_datasets)
-        elif data_filter == "has_default_profile_image":
-            add_col(
-                raw_datasets, data_filter, profile_image
-            )
-        elif data_filter == "no_screen_name":
-            add_col(
-                raw_datasets, data_filter, no_screen_name
-            )
-        elif data_filter == "geo_enabled":
-            add_col(
-                raw_datasets, data_filter, geo_enabled
-            )
-        elif data_filter == "language_not_empty":
-            add_col(
-                raw_datasets, data_filter, lang_not_empty
-            )
-        elif data_filter == "description_contains_url":
-            add_col(
-                raw_datasets, data_filter, contains_url
-            )
-        elif data_filter == "description_length":
-            add_col(
-                raw_datasets, data_filter, desc_length
-            )
-        elif data_filter == "has_name":
-            add_col(
-                raw_datasets, data_filter, has_name
-            )
-        elif data_filter == "fr_fo_ratio_gt_50":
-            add_col(
-                raw_datasets, data_filter, friend_follower_bot(50)
-            )
-        elif data_filter == "fr_fo_ratio_gt_100":
-            add_col(
-                raw_datasets, data_filter, friend_follower_bot(100)
-            )
-        elif data_filter == "fr_fo_ratio":
-            add_col(
-                raw_datasets, data_filter, friend_follower_ratio
-            )
+        else:
+            add_col(raw_datasets, data_filter, TO_BUILD[data_filter])
 
     return raw_datasets
+
+
+
+# Contains both features we want to build from other
+# features and existing features we want to modify.
+# Add features which fall into either of those cases
+# here and add support in `build_filtered_datasets`.
+def foo():
+    pass
+
+TO_BUILD = {
+    "is_bot": lambda x: x,
+    "has_default_profile_image": profile_image, # 99% data seems to have this? Useless.
+    "no_screen_name": no_screen_name, # All data has this. Useless.
+    "geo_enabled": geo_enabled, # Super important feature. T1, T2, T2 rarely has this.
+    "language_not_empty": lang_not_empty, # Sketchy cause it works well on our dataset.
+    "description_contains_url": contains_url, # Not that useful.
+    "description_length": desc_length, # Useful for some of the traditional ones.
+    "has_name": has_name, # Pretty useless, most of them have a name.
+    "fr_fo_ratio_gt_50": friend_follower_bot(50), # Really useless feature on our dataset.
+    "fr_fo_ratio_gt_100": friend_follower_bot(100), # Useless on our dataset.
+    "fr_fo_ratio": friend_follower_ratio # raw ratio with no limits.
+}
+
+
+TO_KEEP = list(TO_BUILD.keys())[:]
+TO_KEEP.extend([
+    "followers_count",
+    "friends_count",
+    "statuses_count",
+    "favourites_count",
+    "listed_count"
+])
 
 
 def _col_type(datasets, col):

@@ -20,12 +20,13 @@ def base_test():
         , random_state=12345
     )
 
-    print(sample.dtypes)
+    # print(sample.dtypes)
 
     nb = MultinomialNB()
     nb.fit(sample, is_bot)
 
-    for s in (sorted(map(lambda x: (x[0], math.exp(x[1])), zip(sample.keys(), nb.feature_log_prob_[1])), key=lambda x: x[1])):
+    # kinda feature importance?
+    for s in (sorted(map(lambda x: (x[0], math.exp(x[1])), zip(sample.keys(), nb.feature_log_prob_[0])), key=lambda x: x[1])):
         print(s)
 
     test_sample, is_bot_test = base_config.sample(
