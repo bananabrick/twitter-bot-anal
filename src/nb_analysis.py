@@ -16,7 +16,7 @@ def base_test():
             data.DataSets.T_1: 200,
             data.DataSets.T_2: 100,
             data.DataSets.T_3: 200,
-        }, bucket_non_bool=True
+        }, bucket_non_bool=False
         , random_state=12345
     )
 
@@ -35,7 +35,7 @@ def base_test():
             data.DataSets.T_1: 600,
             data.DataSets.T_2: 100,
             data.DataSets.T_3: 600,
-        }, bucket_non_bool=True
+        }, bucket_non_bool=False
         , random_state=23456
     )
 

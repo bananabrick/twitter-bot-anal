@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from functools import lru_cache
 
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
@@ -51,3 +52,19 @@ def plot_feature_importances(
         xlabel,
         "features",
     )
+
+
+@lru_cache(maxsize=10000)
+def edit_distance(word1, word2):
+    if not word1 and not word2:
+        return 0
+    elif not word1 or not word2:
+        return max(map(len, [word1, word2]))
+    elif word1[0] == word2[0]:
+        return edit_distance(word1[1:], word2[1:])
+    else:  # word1[0] != word2[0]
+        return min([
+            1 + edit_distance(word1, word2[1:]),  # delete character
+            1 + edit_distance(word1[1:], word2),  # insert character
+            1 + edit_distance(word1, word1[0] + word2[1:])
+        ])

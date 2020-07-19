@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 
 
 def base_test():
-    base_config = useful_configs.MINIMAL_PREEXIST
+    base_config = useful_configs.ALL
 
     sample, is_bot = base_config.sample(
         {
@@ -16,7 +16,8 @@ def base_test():
             data.DataSets.T_1: 200,
             data.DataSets.T_2: 100,
             data.DataSets.T_3: 200,
-        }
+        },
+        random_state=12345
     )
 
     tree = RandomForestClassifier()
@@ -32,7 +33,8 @@ def base_test():
             data.DataSets.T_2: 100,
             data.DataSets.T_3: 600,
 
-        }
+        },
+        random_state=23456
     )
 
     tree_prediction = tree.predict(test_sample)

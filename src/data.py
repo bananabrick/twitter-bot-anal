@@ -124,11 +124,22 @@ def friend_follower_ratio(row):
 def friend_follower_bot(limit):
     def h(row):
         '''
-        Returns 1 if the friends : followers ratio
+        Returns True if the friends : followers ratio
         is greater than limit.
         '''
-        return False if friend_follower_ratio(row) > limit else True
+        return friend_follower_ratio(row) > limit
     return h
+
+
+def name_edit_distance(row):
+    """
+    Edit Distance (see Wikipedia) between screen name and
+    """
+    def get_str_feature(key):
+        return '' if pandas.isna(row[key]) else row[key]
+    name = get_str_feature('name')
+    screen_name = get_str_feature('screen_name')
+    return util.edit_distance(name, screen_name)
 
 
 def build_filtered_datasets(raw_datasets, to_build):
@@ -139,15 +150,14 @@ def build_filtered_datasets(raw_datasets, to_build):
 
     to_build: The list of features which we want to build.
     '''
-    for feat in to_build:
-        if feat not in TO_BUILD:
-            raise ValueError("No support to build feature: ", feat)
 
     for data_filter in to_build:
         if data_filter == "is_bot":
             util.apply_to_all(add_final_classification, raw_datasets)
-        else:
+        elif data_filter in TO_BUILD:
             add_col(raw_datasets, data_filter, TO_BUILD[data_filter])
+        else:
+            raise ValueError("No support to build feature: ", data_filter)
 
     return raw_datasets
 
@@ -167,7 +177,8 @@ TO_BUILD = {
     "has_name": has_name,  # Pretty useless, most of them have a name.
     "fr_fo_ratio_gt_50": friend_follower_bot(50),  # Really useless feature on our dataset.
     "fr_fo_ratio_gt_100": friend_follower_bot(100),  # Useless on our dataset.
-    "fr_fo_ratio": friend_follower_ratio  # raw ratio with no limits.
+    "fr_fo_ratio": friend_follower_ratio,  # raw ratio with no limits.
+    "name_edit_distance": name_edit_distance,
 }
 
 
