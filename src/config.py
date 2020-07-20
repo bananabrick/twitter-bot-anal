@@ -8,7 +8,6 @@ import data
 random_state = numpy.random.RandomState(12345)
 
 
-
 class ConfigVars:
     datasets: Dict[data.DataSets, pandas.DataFrame]
 
