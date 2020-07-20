@@ -23,47 +23,16 @@ def random_test():
 def base_test():
     random_state_reg = numpy.random.RandomState(4)
     base_config = useful_configs.ALL
-
-    sample, is_bot = base_config.sample(
-        {
-            data.DataSets.GENUINE: 300,
-            data.DataSets.T_1: 100,
-            data.DataSets.T_2: 100,
-            data.DataSets.T_3: 100,
-        }
-    )
-
     reg = LogisticRegression(max_iter=1000, random_state=random_state_reg)
-    reg.fit(sample, is_bot)
 
-    test_sample, is_bot_test = base_config.sample(
-        {
-            data.DataSets.GENUINE: 1300,
-            data.DataSets.T_1: 600,
-            data.DataSets.T_2: 100,
-            data.DataSets.T_3: 600,
-
-        }
+    importance_func = lambda reg: reg.coef_[0]
+    experiments.plot_importances(
+        "reg", "logistic regression", reg, "Feature Coefficients", importance_func,
+        base_config
     )
-
-    reg_prediction = reg.predict(test_sample)
-    compare = pandas.DataFrame(
-        {
-            'is_bot_original': is_bot_test,
-            'reg_is_bot_predict': reg_prediction
-        }
-    )
-
-    reg_importances = list(zip(sample.columns.values, reg.coef_[0]))
-    util.plot_feature_importances(
-        "reg", "Logistic Regression feature importances",
-        "Feature Coefficients", reg_importances
-    )
-
-    print(util.accuracy(compare, "is_bot_original", "reg_is_bot_predict"))
 
 
 if __name__ == "__main__":
-    # base_test()
+    base_test()
     # cv_test()
-    random_test()
+    # random_test()

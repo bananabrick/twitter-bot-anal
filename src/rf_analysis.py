@@ -26,45 +26,20 @@ def random_test():
 def base_test():
     random_state_rf = numpy.random.RandomState(12345)
     base_config = useful_configs.ALL
-
-    sample, is_bot = base_config.sample(
-        {
-            data.DataSets.GENUINE: 500,
-            data.DataSets.T_1: 200,
-            data.DataSets.T_2: 100,
-            data.DataSets.T_3: 200,
-        }
-    )
-
     tree = RandomForestClassifier(random_state=random_state_rf)
-    tree.fit(sample, is_bot)
 
-    test_sample, is_bot_test = base_config.sample(
-        {
-            data.DataSets.GENUINE: 1300,
-            data.DataSets.T_1: 600,
-            data.DataSets.T_2: 100,
-            data.DataSets.T_3: 600,
-
-        }
+    importance_func = lambda tree: tree.feature_importances_
+    experiments.plot_importances(
+        "rf", "random forest", tree, "Gini Importance", importance_func,
+        base_config
     )
 
-    tree_prediction = tree.predict(test_sample)
-    compare = pandas.DataFrame(
-        {
-            'is_bot_original': is_bot_test,
-            'tree_is_bot_predict': tree_prediction,
-        }
-    )
+    # util.plot_feature_importances(
+    #     "rf", "Random Forest feature importances",
+    #     "Gini Importance", rf_importances
+    # )
 
-    rf_importances = list(zip(sample.columns.values, tree.feature_importances_))
-    print(tree.classes_)
-    util.plot_feature_importances(
-        "rf", "Random Forest feature importances",
-        "Gini Importance", rf_importances
-    )
-
-    print(util.accuracy(compare, "is_bot_original", "tree_is_bot_predict"))
+    # print(util.accuracy(compare, "is_bot_original", "tree_is_bot_predict"))
 
 
 if __name__ == "__main__":
