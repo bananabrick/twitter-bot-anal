@@ -4,6 +4,7 @@ from sklearn.ensemble import AdaBoostClassifier
 import data
 import useful_configs
 import util
+import experiments
 
 
 def base_test():
@@ -49,5 +50,9 @@ def base_test():
     print(util.accuracy(compare, "is_bot_original", "ada_is_bot_predict"))
 
 
+def cv():
+    experiments.run_cv('Adaboost', AdaBoostClassifier(), useful_configs.ADA)
+
 if __name__ == "__main__":
-    base_test()
+    # base_test()
+    cv()

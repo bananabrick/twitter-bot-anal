@@ -51,7 +51,7 @@ def base_test():
 
 
 def cv_test():
-    experiments.run_cv("Multinomial NB", MultinomialNB(), useful_configs.ALL)
+    experiments.run_cv("Multinomial NB", MultinomialNB(), useful_configs.ALL, bucket_non_bool=True)
 
 
 if __name__ == "__main__":
