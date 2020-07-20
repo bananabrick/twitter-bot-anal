@@ -130,16 +130,23 @@ def friend_follower_bot(limit):
         return friend_follower_ratio(row) > limit
     return h
 
+def get_str_feature(row, key):
+    return '' if pandas.isna(row[key]) else row[key]
+
 
 def name_edit_distance(row):
     """
     Edit Distance (see Wikipedia) between screen name and
     """
-    def get_str_feature(key):
-        return '' if pandas.isna(row[key]) else row[key]
-    name = get_str_feature('name')
-    screen_name = get_str_feature('screen_name')
+    name = get_str_feature(row, 'name')
+    screen_name = get_str_feature(row, 'screen_name')
     return util.edit_distance(name, screen_name)
+
+def profile_background_image(row):
+    """
+    Whether or not the user has supplied a background image
+    """
+    return get_str_feature(row, "profile_background_image_url").find('profile_background_images') != -1
 
 
 def build_filtered_datasets(raw_datasets, to_build):
@@ -179,6 +186,7 @@ TO_BUILD = {
     "fr_fo_ratio_gt_100": friend_follower_bot(100),  # Useless on our dataset.
     "fr_fo_ratio": friend_follower_ratio,  # raw ratio with no limits.
     "name_edit_distance": name_edit_distance,
+    "profile_background_image": profile_background_image,
 }
 
 

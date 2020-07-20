@@ -4,7 +4,7 @@ import pandas
 import useful_configs
 import math
 
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import MultinomialNB, BernoulliNB, ComplementNB, GaussianNB
 
 
 def base_test():
@@ -16,8 +16,7 @@ def base_test():
             data.DataSets.T_1: 200,
             data.DataSets.T_2: 100,
             data.DataSets.T_3: 200,
-        }, bucket_non_bool=False
-        , random_state=12345
+        }, bucket_non_bool=True
     )
 
     # print(sample.dtypes)
@@ -26,7 +25,7 @@ def base_test():
     nb.fit(sample, is_bot)
 
     # kinda feature importance?
-    for s in (sorted(map(lambda x: (x[0], math.exp(x[1])), zip(sample.keys(), nb.feature_log_prob_[0])), key=lambda x: x[1])):
+    for s in (sorted(map(lambda x: (x[0], math.exp(x[1])), zip(sample.keys(), nb.feature_log_prob_[1])), key=lambda x: x[1])):
         print(s)
 
     test_sample, is_bot_test = base_config.sample(
@@ -35,8 +34,7 @@ def base_test():
             data.DataSets.T_1: 600,
             data.DataSets.T_2: 100,
             data.DataSets.T_3: 600,
-        }, bucket_non_bool=False
-        , random_state=23456
+        }, bucket_non_bool=True
     )
 
     prediction = nb.predict(test_sample)

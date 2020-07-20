@@ -52,6 +52,7 @@ NB = config.ConfigVars(
         "has_name",
         "fr_fo_ratio",
         "name_edit_distance",
+        "profile_background_image",
     ],
     cols_to_keep=[
         "is_bot",
@@ -66,8 +67,9 @@ NB = config.ConfigVars(
         "friends_count",
         "statuses_count",
         "fr_fo_ratio",
-        "name_edit_distance",
-        # "listed_count" Dropping this cause wtf does it mean?
+        # "name_edit_distance",
+        "profile_background_image",
+        "listed_count",
     ],
     classify_on="is_bot"
 )
@@ -99,6 +101,19 @@ MINIMAL_PREEXIST = config.ConfigVars(
         "followers_count",
         "friends_count",
         "statuses_count",
+    ],
+    classify_on="is_bot"
+)
+
+EDIT_DISTANCE_ONLY = config.ConfigVars(
+    name="edit distance between name and screen_name only",
+    cols_to_build=[
+        "is_bot",
+        "name_edit_distance"
+    ],
+    cols_to_keep=[
+        "is_bot",
+        "name_edit_distance"
     ],
     classify_on="is_bot"
 )

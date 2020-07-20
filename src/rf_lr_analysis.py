@@ -16,8 +16,7 @@ def base_test():
             data.DataSets.T_1: 200,
             data.DataSets.T_2: 100,
             data.DataSets.T_3: 200,
-        },
-        random_state=12345
+        }
     )
 
     tree = RandomForestClassifier()
@@ -33,8 +32,7 @@ def base_test():
             data.DataSets.T_2: 100,
             data.DataSets.T_3: 600,
 
-        },
-        random_state=23456
+        }
     )
 
     tree_prediction = tree.predict(test_sample)

@@ -3,6 +3,7 @@ import util
 import data
 import numpy
 
+random_state = numpy.random.RandomState(12345)
 
 class ConfigVars:
     def __init__(
@@ -43,7 +44,7 @@ class ConfigVars:
         )
         return filtered_ds
 
-    def sample(self, to_sample, bucket_non_bool=False, random_state=None):
+    def sample(self, to_sample, bucket_non_bool=False):
         '''
         Creates a pandas dataframe which we need to
         train on based on the config.
@@ -81,5 +82,9 @@ class ConfigVars:
 
 
         return s, target_column
+
+    def kfold(self, k, test_datasets, bucket_non_bool=False):
+        num_samples = len(self.datasets[data.DataSets.GENUINE])
+
 
 
