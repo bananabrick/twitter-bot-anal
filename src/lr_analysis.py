@@ -26,10 +26,10 @@ def base_test():
 
     sample, is_bot = base_config.sample(
         {
-            data.DataSets.GENUINE: 500,
-            data.DataSets.T_1: 200,
+            data.DataSets.GENUINE: 300,
+            data.DataSets.T_1: 100,
             data.DataSets.T_2: 100,
-            data.DataSets.T_3: 200,
+            data.DataSets.T_3: 100,
         }
     )
 

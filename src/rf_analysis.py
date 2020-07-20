@@ -58,6 +58,7 @@ def base_test():
     )
 
     rf_importances = list(zip(sample.columns.values, tree.feature_importances_))
+    print(tree.classes_)
     util.plot_feature_importances(
         "rf", "Random Forest feature importances",
         "Gini Importance", rf_importances
@@ -67,6 +68,6 @@ def base_test():
 
 
 if __name__ == "__main__":
-    base_test()
+    # base_test()
     # cv_test()
-    # random_test()
+    random_test()

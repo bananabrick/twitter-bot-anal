@@ -90,8 +90,8 @@ def no_screen_name(row):
 
 def geo_enabled(row):
     if row["geo_enabled"] == 1:
-        return False
-    return True
+        return True
+    return False
 
 
 def lang_not_empty(row):
