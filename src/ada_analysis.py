@@ -1,5 +1,6 @@
 import pandas
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 import data
 import useful_configs
@@ -51,7 +52,8 @@ def base_test():
 
 
 def cv():
-    experiments.run_cv('Adaboost', AdaBoostClassifier(), useful_configs.ADA)
+    forest = RandomForestClassifier(n_estimators=500)
+    experiments.run_cv('Adaboost', AdaBoostClassifier(base_estimator=forest, n_estimators=500), useful_configs.ADA)
 
 if __name__ == "__main__":
     # base_test()

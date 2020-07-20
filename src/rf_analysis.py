@@ -10,9 +10,17 @@ from sklearn.linear_model import LogisticRegression
 
 
 def cv_test():
-    random_state_rf = numpy.random.RandomState(4)
+    random_state_rf = numpy.random.RandomState(1234)
+
     tree = RandomForestClassifier(random_state=random_state_rf)
     experiments.run_cv("random forest", tree, useful_configs.ALL)
+
+
+def random_test():
+    random_state_rf = numpy.random.RandomState(1234)
+
+    tree = RandomForestClassifier(random_state=random_state_rf)
+    experiments.run_random_sample("random forest", tree, useful_configs.ALL)
 
 
 def base_test():
@@ -59,5 +67,6 @@ def base_test():
 
 
 if __name__ == "__main__":
-    base_test()
+    # base_test()
     cv_test()
+    # random_test()

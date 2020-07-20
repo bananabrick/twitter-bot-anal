@@ -14,6 +14,12 @@ def cv_test():
     experiments.run_cv("logistic regression", reg, useful_configs.ALL)
 
 
+def random_test():
+    random_state_reg = numpy.random.RandomState(4)
+    reg = LogisticRegression(max_iter=1000, random_state=random_state_reg)
+    experiments.run_random_sample("logistic regression", reg, useful_configs.ALL)
+
+
 def base_test():
     random_state_reg = numpy.random.RandomState(4)
     base_config = useful_configs.ALL
@@ -59,4 +65,5 @@ def base_test():
 
 if __name__ == "__main__":
     # base_test()
-    cv_test()
+    # cv_test()
+    random_test()
