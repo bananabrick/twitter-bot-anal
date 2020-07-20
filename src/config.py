@@ -1,8 +1,9 @@
-import pandas
-import util
-import data
-import numpy
 from typing import Dict, Set
+
+import numpy
+import pandas
+
+import data
 
 random_state = numpy.random.RandomState(12345)
 

@@ -1,7 +1,9 @@
-import pandas
-import util
 import re
 from enum import Enum, unique
+
+import pandas
+
+import util
 
 
 @unique

@@ -1,10 +1,10 @@
-import data
-import util
 import pandas
-import useful_configs
-
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+
+import data
+import useful_configs
+import util
 
 
 def base_test():

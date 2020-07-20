@@ -1,9 +1,10 @@
-import data
-import util
 import pandas
-import useful_configs
-
 from sklearn.ensemble import AdaBoostClassifier
+
+import data
+import useful_configs
+import util
+
 
 def base_test():
     base_config = useful_configs.ADA

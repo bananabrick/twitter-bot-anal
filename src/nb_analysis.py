@@ -1,12 +1,11 @@
-import data
-import util
-import pandas
-import useful_configs
 import math
-import statistics
 
-from sklearn.naive_bayes import MultinomialNB, BernoulliNB, ComplementNB, GaussianNB
-from sklearn.model_selection import cross_validate
+import pandas
+from sklearn.naive_bayes import MultinomialNB
+
+import data
+import useful_configs
+import util
 
 
 def base_test():

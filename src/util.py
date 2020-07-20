@@ -1,9 +1,10 @@
-import matplotlib.pyplot as plt
 import statistics
-
 from functools import lru_cache
-from sklearn.model_selection import cross_validate
+
+import matplotlib.pyplot as plt
 from matplotlib import rcParams
+from sklearn.model_selection import cross_validate
+
 rcParams.update({'figure.autolayout': True})
 
 
