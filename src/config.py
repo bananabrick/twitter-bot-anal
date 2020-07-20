@@ -9,8 +9,6 @@ random_state = numpy.random.RandomState(12345)
 
 
 class ConfigVars:
-    datasets: Dict[data.DataSets, pandas.DataFrame]
-
     def __init__(
         self, name, cols_to_build, cols_to_keep, classify_on
     ):
@@ -74,7 +72,7 @@ class ConfigVars:
 
         return self._split_to_XY(s, bucket_non_bool)
 
-    def even_sample(self, test_datasets: Set[data.TestDataSetType], bucket_non_bool=False):
+    def even_sample(self, test_datasets, bucket_non_bool=False):
         """
         return a dataframe with 50% genuine and 50% test (evenly split across the test types in test_datasets)
         """
@@ -87,8 +85,9 @@ class ConfigVars:
         genuine = self.datasets[data.DataSets.GENUINE].sample(num_samples*len(test_datasets), random_state=random_state)
         test = pandas.DataFrame()
         for dataset_type in test_datasets:
-            type_df = pandas.concat(map(lambda x: self.datasets[x], dataset_type.value))
-            test = pandas.concat([test, type_df.sample(num_samples, random_state=random_state)])
+            # Pass sort=True here, to get rid of the annoying ass warning.
+            type_df = pandas.concat(map(lambda x: self.datasets[x], dataset_type.value), sort=True)
+            test = pandas.concat([test, type_df.sample(num_samples, random_state=random_state)], sort=True)
 
         # if this breaks, the num_samples logic is trash
         assert len(genuine) == len(test)

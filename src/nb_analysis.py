@@ -5,6 +5,7 @@ from sklearn.naive_bayes import MultinomialNB
 
 import data
 import useful_configs
+import experiments
 import util
 
 
@@ -50,19 +51,7 @@ def base_test():
 
 
 def cv_test():
-    base_config = useful_configs.ALL
-
-    print('\nTrain: Traditional bots, Test: Traditional bots')
-    X, y = base_config.even_sample(test_datasets={data.TestDataSetType.TRADITIONAL_BOT}, bucket_non_bool=True)
-    util.cv_test(MultinomialNB(), X, y)
-
-    print('\nTrain: Social bots, Test: Social bots')
-    X, y = base_config.even_sample(test_datasets={data.TestDataSetType.SOCIAL_BOT}, bucket_non_bool=True)
-    util.cv_test(MultinomialNB(), X, y)
-
-    print('\nTrain: Traditional + Social bots, Test: Traditional + Social bots')
-    X, y = base_config.even_sample(test_datasets={data.TestDataSetType.SOCIAL_BOT, data.TestDataSetType.TRADITIONAL_BOT}, bucket_non_bool=True)
-    util.cv_test(MultinomialNB(), X, y)
+    experiments.run_cv("Multinomial NB", MultinomialNB(), useful_configs.ALL)
 
 
 if __name__ == "__main__":
