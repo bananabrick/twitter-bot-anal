@@ -1,10 +1,15 @@
 import pandas
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-
+import numpy
 import data
 import useful_configs
 import util
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+
+
+random_state_rf = numpy.random.RandomState(12345)
+random_state_reg = numpy.random.RandomState(4)
 
 
 def base_test():
@@ -19,8 +24,8 @@ def base_test():
         }
     )
 
-    tree = RandomForestClassifier()
-    reg = LogisticRegression(max_iter=1000)
+    tree = RandomForestClassifier(random_state=random_state_rf)
+    reg = LogisticRegression(max_iter=1000, random_state=random_state_reg)
 
     reg.fit(sample, is_bot)
     tree.fit(sample, is_bot)
