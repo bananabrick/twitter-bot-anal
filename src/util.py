@@ -76,14 +76,14 @@ def edit_distance(word1, word2):
 
 def cv_test(model, X, y, k=5):
     scores = cross_validate(model, X, y, scoring=['precision', 'recall', 'accuracy'], cv=k)
-    print('precision: avg = {}, {}'.format(statistics.mean(scores['test_precision']), scores['test_precision']))
-    print('recall: avg = {}, {}'.format(statistics.mean(scores['test_recall']), scores['test_recall']))
-    print('accuracy: avg = {}, {}'.format(statistics.mean(scores['test_accuracy']), scores['test_accuracy']))
+    print('precision: avg = {}%, {}'.format(round(statistics.mean(scores['test_precision'])*100, 1), scores['test_precision']))
+    print('recall: avg = {}%, {}'.format(round(statistics.mean(scores['test_recall'])*100, 1), scores['test_recall']))
+    print('accuracy: avg = {}%, {}'.format(round(statistics.mean(scores['test_accuracy'])*100, 1), scores['test_accuracy']))
 
 
 def random_sample_test(model, Xtrain, ytrain, Xtest, ytest):
     model.fit(Xtrain, ytrain)
     predictions = model.predict(Xtest)
-    print('precision: {}'.format(precision_score(ytest, predictions)))
-    print('recall: {}'.format(recall_score(ytest, predictions)))
-    print('accuracy: {}'.format(accuracy_score(ytest, predictions)))
+    print('precision: {}%'.format(round(precision_score(ytest, predictions) * 100, 1)))
+    print('recall: {}%'.format(round(recall_score(ytest, predictions) * 100, 1)))
+    print('accuracy: {}%'.format(round(accuracy_score(ytest, predictions) * 100, 1)))

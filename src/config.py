@@ -5,8 +5,6 @@ import pandas
 
 import data
 
-random_state = numpy.random.RandomState(12345)
-
 
 class ConfigVars:
     def __init__(
@@ -27,6 +25,7 @@ class ConfigVars:
         self.name = name
         self.cols_to_build = cols_to_build
         self.cols_to_keep = cols_to_keep
+        self.random_state = numpy.random.RandomState(12345)
 
         # The feature which we're classifying on.
         # In our case this is going to be `is_bot`.
@@ -65,7 +64,7 @@ class ConfigVars:
         for key, num_samples in to_sample.items():
             num_samples = min(num_samples, len(datasets[key].index))
             sampled_datasets.append(
-                datasets[key].copy(deep=True).sample(num_samples, random_state=random_state)
+                datasets[key].copy(deep=True).sample(num_samples, random_state=self.random_state)
             )
 
         s = pandas.concat(sampled_datasets, sort=False)
@@ -82,12 +81,14 @@ class ConfigVars:
         num_samples = len(self.datasets[data.DataSets.GENUINE])//len(test_datasets)
         for dataset_type in test_datasets:
             num_samples = min(num_samples, sum(map(lambda x: len(self.datasets[x]), dataset_type.value)))
-        genuine = self.datasets[data.DataSets.GENUINE].sample(int(num_samples*len(test_datasets)*frac), random_state=random_state)
+        num_samples = int(num_samples*frac)
+
+        genuine = self.datasets[data.DataSets.GENUINE].sample(num_samples*len(test_datasets), random_state=self.random_state)
         test = pandas.DataFrame()
         for dataset_type in test_datasets:
             # Pass sort=True here, to get rid of the annoying ass warning.
             type_df = pandas.concat(map(lambda x: self.datasets[x], dataset_type.value), sort=True)
-            test = pandas.concat([test, type_df.sample(int(num_samples*frac), random_state=random_state)], sort=True)
+            test = pandas.concat([test, type_df.sample(num_samples, random_state=self.random_state)], sort=True)
 
         # if this breaks, the num_samples logic is trash
         assert len(genuine) == len(test)
