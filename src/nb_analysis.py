@@ -3,6 +3,7 @@ from sklearn.naive_bayes import MultinomialNB
 import useful_configs
 import experiments
 
+
 def cv_test():
     experiments.run_cv("Multinomial Naive Bayes", MultinomialNB(), useful_configs.ALL, bucket_non_bool=True)
 
