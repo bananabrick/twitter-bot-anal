@@ -3,6 +3,7 @@ import numpy
 import data
 import useful_configs
 import util
+import experiments
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -10,6 +11,13 @@ from sklearn.linear_model import LogisticRegression
 
 random_state_rf = numpy.random.RandomState(12345)
 random_state_reg = numpy.random.RandomState(4)
+
+
+def cv_test():
+    tree = RandomForestClassifier(random_state=random_state_rf)
+    reg = LogisticRegression(max_iter=1000, random_state=random_state_reg)
+    experiments.run_cv("random forest", tree, useful_configs.ALL)
+    experiments.run_cv("logistic regression", reg, useful_configs.ALL)
 
 
 def base_test():
@@ -66,4 +74,5 @@ def base_test():
 
 
 if __name__ == "__main__":
-    base_test()
+    # base_test()
+    cv_test()
