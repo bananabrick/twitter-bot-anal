@@ -2,10 +2,15 @@ import pandas
 import util
 import data
 import numpy
+from typing import Dict, Set
 
 random_state = numpy.random.RandomState(12345)
 
+
+
 class ConfigVars:
+    datasets: Dict[data.DataSets, pandas.DataFrame]
+
     def __init__(
         self, name, cols_to_build, cols_to_keep, classify_on
     ):
@@ -66,25 +71,39 @@ class ConfigVars:
             )
 
         s = pandas.concat(sampled_datasets, sort=False)
+
+        return self._split_to_XY(s, bucket_non_bool)
+
+    def even_sample(self, test_datasets: Set[data.TestDataSetType], bucket_non_bool=False):
+        """
+        return a dataframe with 50% genuine and 50% test (evenly split across the test types in test_datasets)
+        """
+        assert test_datasets
+
+        # we want 50% genuine, 50% test (evenly split across the test types)
+        num_samples = len(self.datasets[data.DataSets.GENUINE])//len(test_datasets)
+        for dataset_type in test_datasets:
+            num_samples = min(num_samples, sum(map(lambda x: len(self.datasets[x]), dataset_type.value)))
+        genuine = self.datasets[data.DataSets.GENUINE].sample(num_samples*len(test_datasets), random_state=random_state)
+        test = pandas.DataFrame()
+        for dataset_type in test_datasets:
+            type_df = pandas.concat(map(lambda x: self.datasets[x], dataset_type.value))
+            test = pandas.concat([test, type_df.sample(num_samples, random_state=random_state)])
+
+        # if this breaks, the num_samples logic is trash
+        assert len(genuine) == len(test)
+        df = pandas.concat([genuine, test], join='inner').reset_index(drop=True)
+
+        return self._split_to_XY(df, bucket_non_bool)
+
+    def _split_to_XY(self, df, bucket_non_bool):
         # Get rid of columns which are not needed.
-        s = s.loc[:, self.cols_to_keep]
-
-        # Split non-int/non-float columns
-        # into separate binary columns.
-        # s = pandas.get_dummies(s, dtype=bool)
-        target_column = getattr(s, self.classify_on)
-        s = s.drop(columns=[self.classify_on])
-
+        df = df.loc[:, self.cols_to_keep]
+        # split
+        target_column = getattr(df, self.classify_on)
+        df = df.drop(columns=[self.classify_on])
         if bucket_non_bool:
-            for key, dt in zip(s.keys(), s.dtypes):
+            for key, dt in zip(df.keys(), df.dtypes):
                 if dt != bool:
-                    s[key] = pandas.cut(s[key], 5, labels=list(range(5)))
-
-
-        return s, target_column
-
-    def kfold(self, k, test_datasets, bucket_non_bool=False):
-        num_samples = len(self.datasets[data.DataSets.GENUINE])
-
-
-
+                    df[key] = pandas.cut(df[key], 5, labels=list(range(5)))
+        return df, target_column

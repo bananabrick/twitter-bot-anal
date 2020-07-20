@@ -15,6 +15,12 @@ class DataSets(Enum):
     S_3 = "data/social_spambots_3.csv/users.csv"
 
 
+@unique
+class TestDataSetType(Enum):
+    TRADITIONAL_BOT = (DataSets.T_1, DataSets.T_2, DataSets.T_3)
+    SOCIAL_BOT = (DataSets.S_1, DataSets.S_2, DataSets.S_3)
+
+
 def get_data_sets(data_set_enums=None):
     '''
     data_set_enums: [DataSets enums]. Loads all if this is None.
@@ -22,7 +28,11 @@ def get_data_sets(data_set_enums=None):
     data_set_enums = data_set_enums or list(DataSets)
     ds = {}
     for e in data_set_enums:
-        ds[e] = pandas.read_csv(e.value)
+        try:
+            ds[e] = pandas.read_csv(e.value)
+        except FileNotFoundError:
+            # could be running in the /src directory
+            ds[e] = pandas.read_csv('../'+e.value)
     return ds
 
 

@@ -3,12 +3,14 @@ import util
 import pandas
 import useful_configs
 import math
+import statistics
 
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB, ComplementNB, GaussianNB
+from sklearn.model_selection import cross_validate
 
 
 def base_test():
-    base_config = useful_configs.NB
+    base_config = useful_configs.ALL
 
     sample, is_bot = base_config.sample(
         {
@@ -48,5 +50,17 @@ def base_test():
     print(util.accuracy(compare, "is_bot", "predict"))
 
 
+def cv_test():
+    base_config = useful_configs.ALL
+    X, y = base_config.even_sample(test_datasets={data.TestDataSetType.TRADITIONAL_BOT}, bucket_non_bool=True)
+    nb = MultinomialNB()
+
+    scores = cross_validate(nb, X, y, scoring=['precision', 'recall', 'accuracy'])
+    print('precision: avg = {}, {}'.format(statistics.mean(scores['test_precision']), scores['test_precision']))
+    print('recall: avg = {}, {}'.format(statistics.mean(scores['test_recall']), scores['test_recall']))
+    print('accuracy: avg = {}, {}'.format(statistics.mean(scores['test_accuracy']), scores['test_accuracy']))
+
+
 if __name__ == "__main__":
-    base_test()
+    # base_test()
+    cv_test()
