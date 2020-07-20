@@ -4,6 +4,7 @@ from functools import lru_cache
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from sklearn.model_selection import cross_validate
+from sklearn.metrics import accuracy_score, recall_score, precision_score
 
 rcParams.update({'figure.autolayout': True})
 
@@ -78,3 +79,11 @@ def cv_test(model, X, y, k=5):
     print('precision: avg = {}, {}'.format(statistics.mean(scores['test_precision']), scores['test_precision']))
     print('recall: avg = {}, {}'.format(statistics.mean(scores['test_recall']), scores['test_recall']))
     print('accuracy: avg = {}, {}'.format(statistics.mean(scores['test_accuracy']), scores['test_accuracy']))
+
+
+def random_sample_test(model, Xtrain, ytrain, Xtest, ytest):
+    model.fit(Xtrain, ytrain)
+    predictions = model.predict(Xtest)
+    print('precision: {}'.format(precision_score(ytest, predictions)))
+    print('recall: {}'.format(recall_score(ytest, predictions)))
+    print('accuracy: {}'.format(accuracy_score(ytest, predictions)))

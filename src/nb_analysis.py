@@ -51,9 +51,14 @@ def base_test():
 
 
 def cv_test():
-    experiments.run_cv("Multinomial NB", MultinomialNB(), useful_configs.ALL, bucket_non_bool=True)
+    experiments.run_cv("Multinomial Naive Bayes", MultinomialNB(), useful_configs.NB, bucket_non_bool=True)
+
+
+def random_test():
+    experiments.run_random_sample("Multinomial Naive Bayes", MultinomialNB(), useful_configs.ALL, bucket_non_bool=True)
 
 
 if __name__ == "__main__":
     # base_test()
     cv_test()
+    random_test()

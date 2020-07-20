@@ -34,7 +34,7 @@ ALL = config.ConfigVars(
         "statuses_count",
         "fr_fo_ratio",
         "name_edit_distance",
-        # "listed_count" Dropping this cause wtf does it mean?
+        "listed_count",
     ],
     classify_on="is_bot"
 )
@@ -87,9 +87,10 @@ NB = config.ConfigVars(
         "description_length",
         "geo_enabled",
         "has_name",
+        "fr_fo_ratio_gt_100",
+        "fr_fo_ratio_gt_50",
         "fr_fo_ratio",
         "name_edit_distance",
-        "profile_background_image",
     ],
     cols_to_keep=[
         "is_bot",
@@ -98,14 +99,15 @@ NB = config.ConfigVars(
         "language_not_empty",
         "description_contains_url",
         "description_length",
+        "fr_fo_ratio_gt_100",
+        "fr_fo_ratio_gt_50",
         "has_name",
         "geo_enabled",
         "followers_count",
         "friends_count",
         "statuses_count",
         "fr_fo_ratio",
-        # "name_edit_distance",
-        "profile_background_image",
+        "name_edit_distance",
         "listed_count",
     ],
     classify_on="is_bot"

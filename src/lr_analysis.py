@@ -58,5 +58,5 @@ def base_test():
 
 
 if __name__ == "__main__":
-    base_test()
-    # cv_test()
+    # base_test()
+    cv_test()

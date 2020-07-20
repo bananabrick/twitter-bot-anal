@@ -72,7 +72,7 @@ class ConfigVars:
 
         return self._split_to_XY(s, bucket_non_bool)
 
-    def even_sample(self, test_datasets, bucket_non_bool=False):
+    def even_sample(self, test_datasets, bucket_non_bool=False, frac=1):
         """
         return a dataframe with 50% genuine and 50% test (evenly split across the test types in test_datasets)
         """
@@ -82,12 +82,12 @@ class ConfigVars:
         num_samples = len(self.datasets[data.DataSets.GENUINE])//len(test_datasets)
         for dataset_type in test_datasets:
             num_samples = min(num_samples, sum(map(lambda x: len(self.datasets[x]), dataset_type.value)))
-        genuine = self.datasets[data.DataSets.GENUINE].sample(num_samples*len(test_datasets), random_state=random_state)
+        genuine = self.datasets[data.DataSets.GENUINE].sample(int(num_samples*len(test_datasets)*frac), random_state=random_state)
         test = pandas.DataFrame()
         for dataset_type in test_datasets:
             # Pass sort=True here, to get rid of the annoying ass warning.
             type_df = pandas.concat(map(lambda x: self.datasets[x], dataset_type.value), sort=True)
-            test = pandas.concat([test, type_df.sample(num_samples, random_state=random_state)], sort=True)
+            test = pandas.concat([test, type_df.sample(int(num_samples*frac), random_state=random_state)], sort=True)
 
         # if this breaks, the num_samples logic is trash
         assert len(genuine) == len(test)
