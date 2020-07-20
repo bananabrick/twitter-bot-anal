@@ -51,10 +51,16 @@ def base_test():
     print(util.accuracy(compare, "is_bot_original", "ada_is_bot_predict"))
 
 
-def cv():
+def cv_test():
     forest = RandomForestClassifier(n_estimators=500)
     experiments.run_cv('Adaboost', AdaBoostClassifier(base_estimator=forest, n_estimators=500), useful_configs.ADA)
 
+def random_test():
+    forest = RandomForestClassifier(n_estimators=500)
+    experiments.run_random_sample('Adaboost', AdaBoostClassifier(base_estimator=forest, n_estimators=500), useful_configs.ADA)
+
 if __name__ == "__main__":
     # base_test()
-    cv()
+    cv_test()
+    random_test()
+    
