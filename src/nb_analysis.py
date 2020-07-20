@@ -55,10 +55,7 @@ def cv_test():
     X, y = base_config.even_sample(test_datasets={data.TestDataSetType.TRADITIONAL_BOT}, bucket_non_bool=True)
     nb = MultinomialNB()
 
-    scores = cross_validate(nb, X, y, scoring=['precision', 'recall', 'accuracy'])
-    print('precision: avg = {}, {}'.format(statistics.mean(scores['test_precision']), scores['test_precision']))
-    print('recall: avg = {}, {}'.format(statistics.mean(scores['test_recall']), scores['test_recall']))
-    print('accuracy: avg = {}, {}'.format(statistics.mean(scores['test_accuracy']), scores['test_accuracy']))
+    util.cv_test(nb, X, y)
 
 
 if __name__ == "__main__":

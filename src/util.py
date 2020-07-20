@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
-from functools import lru_cache
+import statistics
 
+from functools import lru_cache
+from sklearn.model_selection import cross_validate
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
 
@@ -68,3 +70,10 @@ def edit_distance(word1, word2):
             1 + edit_distance(word1[1:], word2),        # insert character
             1 + edit_distance(word1[1:], word2[1:])     # replace character
         ])
+
+
+def cv_test(model, X, y, k=5):
+    scores = cross_validate(model, X, y, scoring=['precision', 'recall', 'accuracy'], cv=k)
+    print('precision: avg = {}, {}'.format(statistics.mean(scores['test_precision']), scores['test_precision']))
+    print('recall: avg = {}, {}'.format(statistics.mean(scores['test_recall']), scores['test_recall']))
+    print('accuracy: avg = {}, {}'.format(statistics.mean(scores['test_accuracy']), scores['test_accuracy']))
