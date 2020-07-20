@@ -6,7 +6,7 @@ import useful_configs
 from sklearn.ensemble import AdaBoostClassifier
 
 def base_test():
-    base_config = useful_configs.ALL
+    base_config = useful_configs.ADA
 
     sample, is_bot = base_config.sample(
         {
