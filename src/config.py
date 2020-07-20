@@ -25,13 +25,15 @@ class ConfigVars:
         self.name = name
         self.cols_to_build = cols_to_build
         self.cols_to_keep = cols_to_keep
-        assert classify_on in cols_to_build and classify_on in cols_to_keep
-
         self.random_state = numpy.random.RandomState(12345)
 
         # The feature which we're classifying on.
         # In our case this is going to be `is_bot`.
         self.classify_on = classify_on
+
+        # This assumes that we're always building the classifier.
+        assert classify_on in cols_to_build and classify_on in cols_to_keep
+
         self.datasets = None
 
     def _maybe_build_datasets(self):   
@@ -62,7 +64,7 @@ class ConfigVars:
         self._maybe_build_datasets()
         datasets = self.datasets
         sampled_datasets = []
-        for key, num_samples in to_sample.items():
+        for key, num_samples in sorted(to_sample.items(), key=lambda x: x[0].value):
             num_samples = min(num_samples, len(datasets[key].index))
             sampled_datasets.append(
                 datasets[key].copy(deep=True).sample(num_samples, random_state=self.random_state)
