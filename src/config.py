@@ -25,26 +25,26 @@ class ConfigVars:
         self.name = name
         self.cols_to_build = cols_to_build
         self.cols_to_keep = cols_to_keep
+        assert classify_on in cols_to_build and classify_on in cols_to_keep
+
         self.random_state = numpy.random.RandomState(12345)
 
         # The feature which we're classifying on.
         # In our case this is going to be `is_bot`.
         self.classify_on = classify_on
+        self.datasets = None
 
-        self.datasets = self._build_datasets()
-        for ds in self.datasets.values():
-            if self.classify_on not in ds.columns.values:
-                raise ValueError(
-                    "Feature which is being classified on does not exist."
-                )
+    def _maybe_build_datasets(self):   
+        if self.datasets is not None:
+            # Datasets have already been built.
+            return
 
-    def _build_datasets(self):        
         raw_ds = data.get_data_sets()
         filtered_ds = data.build_filtered_datasets(
             raw_ds,
             self.cols_to_build
         )
-        return filtered_ds
+        self.datasets = filtered_ds
 
     def sample(self, to_sample, bucket_non_bool=False):
         '''
@@ -59,6 +59,7 @@ class ConfigVars:
         Returns the dataframe with test feature and
         a column of the target feature defined by classify on.
         '''
+        self._maybe_build_datasets()
         datasets = self.datasets
         sampled_datasets = []
         for key, num_samples in to_sample.items():
@@ -75,6 +76,7 @@ class ConfigVars:
         """
         return a dataframe with 50% genuine and 50% test (evenly split across the test types in test_datasets)
         """
+        self._maybe_build_datasets()
         assert test_datasets
 
         # we want 50% genuine, 50% test (evenly split across the test types)
