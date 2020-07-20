@@ -88,10 +88,10 @@ def no_screen_name(row):
     return True
 
 
-def geo_enabled(row):
+def geo_disabled(row):
     if row["geo_enabled"] == 1:
-        return True
-    return False
+        return False
+    return True
 
 
 def lang_not_empty(row):
@@ -189,7 +189,7 @@ TO_BUILD = {
     "is_bot": None,
     "has_default_profile_image": profile_image,  # 99% data seems to have this? Useless.
     "no_screen_name": no_screen_name,  # All data has this. Useless.
-    "geo_enabled": geo_enabled,  # Super important feature. T1, T2, T2 rarely has this.
+    "geo_disabled": geo_disabled,  # Super important feature. T1, T2, T2 rarely has this.
     "language_not_empty": lang_not_empty,  # Sketchy cause it works well on our dataset.
     "description_contains_url": contains_url,  # Not that useful.
     "description_length": desc_length,  # Useful for some of the traditional ones.

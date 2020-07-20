@@ -36,6 +36,6 @@ def graphs_and_data():
 
 
 if __name__ == "__main__":
-    # cv_test()
-    # random_test()
-    graphs_and_data()
+    cv_test()
+    random_test()
+    # graphs_and_data()
