@@ -9,9 +9,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
 
-
-
-
 def cv_test():
     random_state_rf = numpy.random.RandomState(4)
     tree = RandomForestClassifier(random_state=random_state_rf)
