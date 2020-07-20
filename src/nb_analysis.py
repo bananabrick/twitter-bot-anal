@@ -29,7 +29,7 @@ def graphs_and_data():
                                 bucket_non_bool=True,
                                 frac=0.4))
     not_prob = dict(zip(Xtrain.columns, map(lambda x: math.exp(x), model.feature_log_prob_[0])))
-    bot_prob = dict(zip(Xtrain.columns, map(lambda x: math.exp(x), model.feature_log_prob_[0])))
+    bot_prob = dict(zip(Xtrain.columns, map(lambda x: math.exp(x), model.feature_log_prob_[1])))
     feature_importances = {k : bot_prob[k] - v for (k,v) in not_prob.items()}
     for lol in sorted(feature_importances.items(), key=lambda x: x[1]):
         print(lol)
