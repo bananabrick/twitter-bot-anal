@@ -9,7 +9,7 @@ import experiments
 
 
 def base_test():
-    base_config = useful_configs.ADA
+    base_config = useful_configs.ALL
 
     sample, is_bot = base_config.sample(
         {
@@ -20,7 +20,8 @@ def base_test():
         }
     )
 
-    ada = AdaBoostClassifier()
+    forest = RandomForestClassifier(n_estimators=500)
+    ada = AdaBoostClassifier(base_estimator=forest, n_estimators=500)
     
     ada.fit(sample, is_bot)
 
@@ -51,16 +52,15 @@ def base_test():
     print(util.accuracy(compare, "is_bot_original", "ada_is_bot_predict"))
 
 
-def cv_test():
-    forest = RandomForestClassifier(n_estimators=500)
-    experiments.run_cv('Adaboost', AdaBoostClassifier(base_estimator=forest, n_estimators=500), useful_configs.ADA)
+def cv_test(config, estimators):
+    forest = RandomForestClassifier(n_estimators=estimators)
+    experiments.run_cv('Adaboost', AdaBoostClassifier(base_estimator=forest, n_estimators=estimators), config)
 
-def random_test():
-    forest = RandomForestClassifier(n_estimators=500)
-    experiments.run_random_sample('Adaboost', AdaBoostClassifier(base_estimator=forest, n_estimators=500), useful_configs.ADA)
+def random_test(config, estimators):
+    forest = RandomForestClassifier(n_estimators=estimators)
+    experiments.run_random_sample('Adaboost', AdaBoostClassifier(base_estimator=forest, n_estimators=estimators), config)
 
 if __name__ == "__main__":
-    # base_test()
-    cv_test()
-    random_test()
-    
+    #base_test()
+    cv_test(useful_configs.ALL, 500)
+    random_test(useful_configs.ALL, 500)
